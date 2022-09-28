@@ -28,6 +28,21 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get("/logs", async (req, res) => {
+  console.log("TRYING TO FETCH LOGS");
+  try {
+    const data = fs.readFileSync("./logs/access.log", "utf8");
+    res.status(200).json({
+      logs: data.split("\n::ffff").filter(Boolean),
+    });
+    console.log("FETCHED LOGS");
+  } catch (err) {
+    console.error("ERROR FETCHING LOGS");
+    console.error(err.message);
+    res.status(500).json({ message: "Failed to load goals." });
+  }
+});
+
 app.get("/goals", async (req, res) => {
   console.log("TRYING TO FETCH GOALS");
   try {
